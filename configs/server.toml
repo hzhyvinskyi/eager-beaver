@@ -1,1 +1,2 @@
 bind_addr = ":9092"
+log_level = "error"
