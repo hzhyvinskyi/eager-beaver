@@ -1,6 +1,10 @@
 package server
 
 import (
+	"io"
+	"net/http"
+
+	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
 
@@ -8,6 +12,7 @@ import (
 type Server struct {
 	config *Config
 	logger *logrus.Logger
+	router *mux.Router
 }
 
 // New ...
@@ -15,6 +20,7 @@ func New(config *Config) *Server {
 	return &Server{
 		config: config,
 		logger: logrus.New(),
+		router: mux.NewRouter(),
 	}
 }
 
@@ -24,9 +30,11 @@ func (s *Server) Start() error {
 		return err
 	}
 
+	s.configureRouter()
+
 	logrus.Info("Strating server...")
 
-	return nil
+	return http.ListenAndServe(s.config.BindAddr, s.router)
 }
 
 func (s *Server) configureLogger() error {
@@ -36,4 +44,14 @@ func (s *Server) configureLogger() error {
 	}
 	s.logger.SetLevel(level)
 	return nil
+}
+
+func (s *Server) configureRouter() {
+	s.router.HandleFunc("/hello", s.handleHello())
+}
+
+func (s *Server) handleHello() http.HandlerFunc {
+	return func (w http.ResponseWriter, r *http.Request) {
+		io.WriteString(w, "Hello There!")
+	}
 }
