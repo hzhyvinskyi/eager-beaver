@@ -1,2 +1,3 @@
 bind_addr = ":9092"
 log_level = "debug"
+database_url = "user=root password=dell dbname=beaver_db sslmode=disable"
