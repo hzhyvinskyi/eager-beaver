@@ -8,8 +8,9 @@ import (
 
 // Dal ...
 type Dal struct {
-	config *Config
-	db	   *sql.DB
+	config			*Config
+	db				*sql.DB
+	userRepository	*UserRepository
 }
 
 // New ...
@@ -21,7 +22,7 @@ func New(config *Config) *Dal {
 
 // Open ...
 func (d *Dal) Open() error {
-	db, err := sql.Open("postgres", d.config.databaseURL)
+	db, err := sql.Open("postgres", d.config.DatabaseURL)
 	if err != nil {
 		return err
 	}
@@ -38,4 +39,17 @@ func (d *Dal) Open() error {
 // Close ...
 func (d *Dal) Close() {
 	d.db.Close()
+}
+
+// User ...
+func (d *Dal) User() *UserRepository {
+	if d.userRepository != nil {
+		return d.userRepository
+	}
+
+	d.userRepository = &UserRepository{
+		dal: d,
+	}
+
+	return d.userRepository
 }
