@@ -6,8 +6,8 @@ import (
 	"testing"
 )
 
-// TestStore ...
-func TestStore(t *testing.T, databaseURL string) (*Dal, func(...string)) {
+// TestDal ...
+func TestDal(t *testing.T, databaseURL string) (*Dal, func(...string)) {
 	t.Helper()
 
 	config := NewConfig()
