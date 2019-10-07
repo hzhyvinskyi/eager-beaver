@@ -4,6 +4,8 @@ import (
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
+	"github.com/go-ozzo/ozzo-validation/is"
+	validation "github.com/go-ozzo/ozzo-validation"
 )
 
 // User ...
@@ -16,6 +18,15 @@ type User struct {
 	PurePassword	string
 	CreatedAt		time.Time
 	UpdatedAt		time.Time
+}
+
+// Validate ...
+func (u *User) Validate() error {
+	return validation.ValidateStruct(
+		u,
+		validation.Field(&u.Email, validation.Required, is.Email),
+		validation.Field(&u.PurePassword, validation.By(requiredIf(u.Password == "")), validation.Length(6, 100)),
+	)
 }
 
 // BeforeCreate ...
