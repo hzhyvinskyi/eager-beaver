@@ -1,4 +1,4 @@
-package dal
+package sqldal
 
 import "github.com/hzhyvinskyi/eager-beaver/internal/app/model"
 
@@ -8,23 +8,23 @@ type UserRepository struct {
 }
 
 // Create ...
-func (r *UserRepository) Create(u *model.User) (*model.User, error) {
+func (r *UserRepository) Create(u *model.User) error {
 	if err := u.Validate(); err != nil {
-		return nil, err
+		return err
 	}
 
 	if err := u.BeforeCreate(); err != nil {
-		return nil, err
+		return err
 	}
 
 	if err := r.dal.db.QueryRow(
 		"INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING id",
 		u.FirstName, u.LastName, u.Email, u.Password,
 	).Scan(&u.ID); err != nil {
-		return nil, err
+		return err
 	}
 
-	return u, nil
+	return nil
 }
 
 // FindByEmail ...

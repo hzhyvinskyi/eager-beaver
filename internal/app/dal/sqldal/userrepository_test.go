@@ -1,26 +1,27 @@
-package dal_test
+package sqldal_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/hzhyvinskyi/eager-beaver/internal/app/dal"
+	"github.com/hzhyvinskyi/eager-beaver/internal/app/dal/sqldal"
 	"github.com/hzhyvinskyi/eager-beaver/internal/app/model"
 )
 
 func TestUserRepository_Create(t *testing.T) {
-	d, teardown := dal.TestDal(t, databaseURL)
+	d, teardown := sqldal.TestDB(t, databaseURL)
 	defer teardown("users")
 
-	u, err := d.User().Create(model.TestUser(t))
+    u := model.TestUser
+	err := d.User().Create(u)
 
 	assert.NoError(t, err)
 	assert.NotNil(t, u)
 }
 
 func TestUserRepository_FindByEmail(t *testing.T) {
-	d, teardown := dal.TestDal(t, databaseURL)
+	d, teardown := sqldal.TestDB(t, databaseURL)
 	defer teardown("users")
 
 	email := "user@user.com"

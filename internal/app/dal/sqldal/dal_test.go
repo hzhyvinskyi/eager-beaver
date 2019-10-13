@@ -1,4 +1,4 @@
-package dal_test
+package sqldal_test
 
 import (
 	"os"
